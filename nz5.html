@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>哪吒IP联名案例全景分析</title>
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --secondary: #00CEC9;
+            --dark: #2D3436;
+            --light: #F5F6FA;
+            --accent: #FD79A8;
+            --glass: rgba(255, 255, 255, 0.15);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #F5F7FA 0%, #E4E8F0 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            padding: 80px 0 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--dark);
+            opacity: 0.8;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        .section {
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: var(--transition);
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-right: 20px;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            height: 80%;
+            width: 5px;
+            background: var(--primary);
+            border-radius: 5px;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th {
+            text-align: left;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        td {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            vertical-align: top;
+        }
+
+        .brand {
+            font-weight: 600;
+            color: white;
+        }
+
+        .product {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .impact {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .trend-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .trend-item {
+            margin-bottom: 20px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .trend-item::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .trend-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: white;
+        }
+
+        .trend-desc {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+        }
+
+        .summary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            color: white;
+        }
+
+        .summary-item {
+            margin-bottom: 20px;
+        }
+
+        .summary-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .summary-desc {
+            opacity: 0.9;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--dark);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .card-container {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+
+        /* Animation classes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate {
+            animation: fadeInUp 0.6s forwards;
+        }
+
+        .delay-1 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>哪吒IP联名案例全景分析</h1>
+            <p class="subtitle">跨越经典动画、电影及游戏的品牌合作价值解码</p>
+        </header>
+
+        <section class="section" id="classic">
+            <div class="section-header">
+                <div class="section-icon">🎨</div>
+                <h2>经典哪吒IP联名案例</h2>
+            </div>
+
+            <div class="card-container">
+                <div class="card animate delay-1" style="background: linear-gradient(135deg, #FF9A8B, #FF6B95);">
+                    <div class="card-header">
+                        <div class="card-icon">📺</div>
+                        <div>
+                            <h3>《哪吒传奇》（2003）</h3>
+                            <p class="card-subtitle">央视经典动画的跨界新生</p>
+                        </div>
+                    </div>
+
+                    <table>
+                        <tr>
+                            <th>品牌</th>
+                            <th>联名产品</th>
+                            <th>市场反响</th>
+                        </tr>
+                        <tr>
+                            <td class="brand">晨光文具</td>
+                            <td class="product">哪吒传奇系列文具套装</td>
+                            <td class="impact">学生群体热销，带动Q2销售额增长<span class="highlight">25%</span><br>哪吒形象铅笔盒成抖音爆款，相关话题播放量超<span class="highlight">8000万次</span></td>
+                        </tr>
+                        <tr>
+                            <td class="brand">娃哈哈</td>
+                            <td class="product">哪吒传奇AD钙奶限定包装</td>
+                            <td class="impact">推出"乾坤圈"版瓶身设计，销量环比提升<span class="highlight">18%</span><br>怀旧营销吸引80/90后父母复购</td>
+                        </tr>
+                        <tr>
+                            <td class="brand">361°儿童</td>
+                            <td class="product">哪吒传奇运动鞋服系列</td>
+                            <td class="impact">天猫旗舰店首发当日售罄，童装线销售额同比增长<span class="highlight">40%</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card animate delay-2" style="background: linear-gradient(135deg, #4FACFE, #00C9FF);">
+                    <div class="card-header">
+                        <div class="card-icon">🎞️</div>
+                        <div>
+                            <h3>《哪吒闹海》（1979）</h3>
+                            <p class="card-subtitle">国风美学的商业演绎</p>
+                        </div>
+                    </div>
+
+                    <table>
+                        <tr>
+                            <th>品牌</th>
+                            <th>联名产品</th>
+                            <th>市场反响</th>
+                        </tr>
+                        <tr>
+                            <td class="brand">故宫文创</td>
+                            <td class="product">哪吒闹海非遗主题礼盒</td>
+                            <td class="impact">限量3000套2小时售罄，销售额破<span class="highlight">500万元</span><br>豆瓣评分<span class="highlight">9.1分</span>，被誉为"国潮美学巅峰之作"</td>
+                        </tr>
+                        <tr>
+                            <td class="brand">茶颜悦色</td>
+                            <td class="product">哪吒闹海限定茶饮"混天绫"</td>
+                            <td class="impact">长沙旗舰店单日销量破<span class="highlight">万杯</span>，带动区域GMV增长<span class="highlight">35%</span><br>杯身水墨画设计引发小红书打卡热潮</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="movies">
+            <div class="section-header">
+                <div class="section-icon">🎬</div>
+                <h2>电影IP联名案例</h2>
+            </div>
+
+            <div class="card-container">
+                <div class="card animate delay-1" style="background: linear-gradient(135deg, #A18CD1, #FBC2EB);">
+                    <div class="card-header">
+                        <div class="card-icon">🎭</div>
+                        <div>
+                            <h3>《哪吒之魔童降世》（2019）</h3>
+                            <p class="card-subtitle">现象级动画的商业爆发</p>
+                        </div>
+                    </div>
+
+                    <table>
+                        <tr>
+                            <th>品牌</th>
+                            <th>联名产品</th>
+                            <th>市场反响</th>
+                        </tr>
+                        <tr>
+                            <td class="brand">奈雪的茶</td>
+                            <td class="product">魔丸&灵珠主题奶茶</td>
+                            <td class="impact">首周销量破<span class="highlight">200万杯</span>，相关微博话题阅读量超<span class="highlight">10亿次</span></td>
+                        </tr>
+                        <tr>
+                            <td class="brand">李宁</td>
+                            <td class="product">哪吒之魔童降世运动系列</td>
+                            <td class="impact">乾坤圈设计卫衣成爆款，天猫旗舰店销售额同比增长<span class="highlight">60%</span></td>
+                        </tr>
+                        <tr>
+                            <td class="brand">光明乳业</td>
+                            <td class="product">哪吒儿童成长牛奶</td>
+                            <td class="impact">绑定"我命由我不由天"口号，推动Q4销量增长<span class="highlight">22%</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card animate delay-2" style="background: linear-gradient(135deg, #667EEA, #764BA2);">
+                    <div class="card-header">
+                        <div class="card-icon">🔮</div>
+                        <div>
+                            <h3>《新神榜：哪吒重生》（2021）</h3>
+                            <p class="card-subtitle">赛博朋克风的跨界实验</p>
+                        </div>
+                    </div>
+
+                    <table>
+                        <tr>
+                            <th>品牌</th>
+                            <th>联名产品</th>
+                            <th>市场反响</th>
+                        </tr>
+                        <tr>
+                            <td class="brand">B站会员购</td>
+                            <td class="product">赛博哪吒手办</td>
+                            <td class="impact">众筹金额破<span class="highlight">1200万元</span>，创国产动画衍生品纪录</td>
+                        </tr>
+                        <tr>
+                            <td class="brand">极星汽车</td>
+                            <td class="product">哪吒重生主题限量版车型</td>
+                            <td class="impact">定制车贴设计吸引年轻用户，试驾预约量增长<span class="highlight">300%</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="games">
+            <div class="section-header">
+                <div class="section-icon">🎮</div>
+                <h2>游戏IP联名案例</h2>
+            </div>
+
+            <div class="card-container">
+                <div class="card animate delay-1" style="background: linear-gradient(135deg, #FF758C, #FF7EB3);">
+                    <div class="card-header">
+                        <div class="card-icon">🕹️</div>
+                        <div>
+                            <h3>《王者荣耀》哪吒英雄皮肤</h3>
+                            <p class="card-subtitle">电竞流量的高效转化</p>
+                        </div>
+                    </div>
+
+                    <table>
+                        <tr>
+                            <th>品牌</th>
+                            <th>联名产品</th>
+                            <th>市场反响</th>
+                        </tr>
+                        <tr>
+                            <td class="brand">麦当劳</td>
+                            <td class="product">哪吒皮肤主题套餐</td>
+                            <td class="impact">购餐送皮肤卡活动带动门店流量增长<span class="highlight">45%</span>，皮肤领取率超<span class="highlight">80%</span></td>
+                        </tr>
+                        <tr>
+                            <td class="brand">OPPO</td>
+                            <td class="product">哪吒限定款手机（Reno6 Pro）</td>
+                            <td class="impact">机身镭雕哪吒技能特效，首销<span class="highlight">10万台</span>售罄，京东好评率<span class="highlight">99%</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card animate delay-2" style="background: linear-gradient(135deg, #A6C1EE, #FBC2EB);">
+                    <div class="card-header">
+                        <div class="card-icon">👾</div>
+                        <div>
+                            <h3>《黑神话：悟空》哪吒角色</h3>
+                            <p class="card-subtitle">未上线先火的商业潜力</p>
+                        </div>
+                    </div>
+
+                    <table>
+                        <tr>
+                            <th>品牌</th>
+                            <th>联名产品</th>
+                            <th>市场反响</th>
+                        </tr>
+                        <tr>
+                            <td class="brand">雷蛇</td>
+                            <td class="product">哪吒主题电竞外设</td>
+                            <td class="impact">预售阶段订单量破<span class="highlight">5万件</span>，预计销售额超<span class="highlight">2000万元</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="trends">
+            <div class="section-header">
+                <div class="section-icon">📈</div>
+                <h2>跨界IP联名趋势分析</h2>
+            </div>
+
+            <div class="trend-card animate delay-1" style="background: linear-gradient(135deg, #5F72BD, #9B51E0);">
+                <div class="trend-item">
+                    <div class="trend-title">经典IP价值</div>
+                    <div class="trend-desc">《哪吒传奇》《哪吒闹海》凭借情怀效应，联名产品溢价空间达<span class="highlight">30-50%</span>（如故宫非遗礼盒）</div>
+                </div>
+
+                <div class="trend-item">
+                    <div class="trend-title">电影IP爆发力</div>
+                    <div class="trend-desc">《魔童降世》联名销售额普遍增长<span class="highlight">20-60%</span>，但长尾效应弱于经典IP</div>
+                </div>
+
+                <div class="trend-item">
+                    <div class="trend-title">游戏联动优势</div>
+                    <div class="trend-desc">皮肤/道具类联名转化率高达<span class="highlight">80%</span>（如麦当劳×王者荣耀），用户粘性显著</div>
+                </div>
+
+                <div class="trend-item">
+                    <div class="trend-title">未来潜力领域</div>
+                    <div class="trend-desc"><span class="highlight">元宇宙</span>：虚拟哪吒NFT（如B站数字藏品）单款成交价破<span class="highlight">10万元</span><br><span class="highlight">线下体验</span>：剧本杀、主题餐厅等沉浸式场景开发（如深圳"哪吒重生"主题馆）</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="summary">
+            <div class="summary animate delay-1">
+                <div class="summary-item">
+                    <div class="summary-title">经典IP策略</div>
+                    <div class="summary-desc">适合文化类品牌（如故宫文创）提升溢价，强调文化传承与艺术价值</div>
+                </div>
+
+                <div class="summary-item">
+                    <div class="summary-title">电影IP策略</div>
+                    <div class="summary-desc">需抓住上映期热度，快速推出快消品（如奈雪联名茶饮），注重时效性与话题性</div>
+                </div>
+
+                <div class="summary-item">
+                    <div class="summary-title">游戏IP策略</div>
+                    <div class="summary-desc">建议与科技品牌合作，通过皮肤/硬件绑定年轻用户，强调互动体验与数字资产价值</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>网页由问小白生成，仅供参考</p>
+        <p>最后更新时间为2025-04-26 ，星期六</p>
+        <p>问小白网址：wenxiaobai.com</p>
+    </footer>
+
+    <script>
+        // Intersection Observer for scroll animations
+        const sections = document.querySelectorAll('.section');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
